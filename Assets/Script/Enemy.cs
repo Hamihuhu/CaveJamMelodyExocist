@@ -15,8 +15,7 @@ public class Enemy : MonoBehaviour
     public int maxVisual;
     private LayerMask groudMask;
 
-    private void Start()
-       
+    private void Start()   
     {
        
         currentNote = _toneSheet.Length-1;
@@ -25,6 +24,7 @@ public class Enemy : MonoBehaviour
         tune.text = toneSheet;
         hpvisual.text = health.ToString();
     }
+
     public void TakeDame(HitType hitType,Vector3 source)
     {
 

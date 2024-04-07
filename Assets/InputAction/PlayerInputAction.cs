@@ -107,6 +107,24 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""82627abf-d180-4277-9e09-20f4db8be1c1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rush"",
+                    ""type"": ""Button"",
+                    ""id"": ""af19820d-c9a3-4bc2-a696-359e8acf541e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -373,6 +391,28 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""LeftHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da4c9d7a-ce77-4ea6-823b-28bcc007a6a1"",
+                    ""path"": ""<Keyboard>/#(F)"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""761470f7-caf5-4fa8-af4c-4c0e4fcd2202"",
+                    ""path"": ""<Keyboard>/#(E)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Rush"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -451,6 +491,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_LeftHold = m_Player.FindAction("LeftHold", throwIfNotFound: true);
+        m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
+        m_Player_Rush = m_Player.FindAction("Rush", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -521,6 +563,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_LeftHold;
+    private readonly InputAction m_Player_LockOn;
+    private readonly InputAction m_Player_Rush;
     public struct PlayerActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -534,6 +578,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @LeftHold => m_Wrapper.m_Player_LeftHold;
+        public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
+        public InputAction @Rush => m_Wrapper.m_Player_Rush;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -570,6 +616,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @LeftHold.started += instance.OnLeftHold;
             @LeftHold.performed += instance.OnLeftHold;
             @LeftHold.canceled += instance.OnLeftHold;
+            @LockOn.started += instance.OnLockOn;
+            @LockOn.performed += instance.OnLockOn;
+            @LockOn.canceled += instance.OnLockOn;
+            @Rush.started += instance.OnRush;
+            @Rush.performed += instance.OnRush;
+            @Rush.canceled += instance.OnRush;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -601,6 +653,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @LeftHold.started -= instance.OnLeftHold;
             @LeftHold.performed -= instance.OnLeftHold;
             @LeftHold.canceled -= instance.OnLeftHold;
+            @LockOn.started -= instance.OnLockOn;
+            @LockOn.performed -= instance.OnLockOn;
+            @LockOn.canceled -= instance.OnLockOn;
+            @Rush.started -= instance.OnRush;
+            @Rush.performed -= instance.OnRush;
+            @Rush.canceled -= instance.OnRush;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -674,5 +732,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnLeftHold(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
+        void OnRush(InputAction.CallbackContext context);
     }
 }

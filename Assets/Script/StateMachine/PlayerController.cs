@@ -1,9 +1,6 @@
-
-using DG.Tweening;
+using Cinemachine;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Threading;
 using UnityEngine;
 
 
@@ -23,6 +20,12 @@ public partial class PlayerController : PlayerStateMachine
     private bool IsHoldAttack => input.Hold;
 
     protected bool IsNormalAttack => input.Tap;
+
+    [Header("Camera")]
+    [SerializeField] private Transform followTransform;
+    [SerializeField] private float rotationPower = 0.1f;
+    LockOnTargetDetection enemyDetection;
+
     protected override void SetVariables()
     {
         CanAttack = true;
@@ -31,11 +34,15 @@ public partial class PlayerController : PlayerStateMachine
         _attackTrail.gameObject.SetActive(false);
         inputBuffer = new List<ActionItem>();
 
+        enemyDetection = GetComponent<LockOnTargetDetection>();
+
         base.SetVariables();
     }
     protected override void Update()
     {
         HandleAttack();
+        HandleCameraRotation();
+
         count = inputBuffer.Count;
         if (canAllowBuffer)
         {
@@ -43,6 +50,38 @@ public partial class PlayerController : PlayerStateMachine
         }
         base.Update();
     }
+
+    private void HandleCameraRotation()
+    {
+        if (enemyDetection.IsLocked)
+        {
+            return;
+        }
+
+        //Rotate the Follow Target transform based on the input if the player is not locking onto anything
+        followTransform.transform.rotation *= Quaternion.AngleAxis(input.Look.x * rotationPower, Vector3.up);
+
+        followTransform.transform.rotation *= Quaternion.AngleAxis(-input.Look.y * rotationPower, Vector3.right);
+
+        var angles = followTransform.transform.localEulerAngles;
+        angles.z = 0;
+
+        var angle = followTransform.transform.localEulerAngles.x;
+
+        //Clamp the Up/Down rotation
+        if (angle > 180 && angle < 340)
+        {
+            angles.x = 340;
+        }
+        else if (angle < 180 && angle > 40)
+        {
+            angles.x = 40;
+        }
+
+        followTransform.transform.localEulerAngles = angles;
+    }
+
+
     private void TryBufferedAction()
     {
 

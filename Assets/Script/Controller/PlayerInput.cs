@@ -44,17 +44,7 @@ public class PlayerInput : MonoBehaviour
         PlayerInputAction.Player.Interact.canceled += OnInteract;
 
         PlayerInputAction.Player.Look.performed += OnLook;
-        PlayerInputAction.Player.Look.canceled += OnLook;
-    }
-
-    public bool Hold
-    {
-        get { return _hold && !playerControllerInputBlocked && !m_ExternalInputBlocked; }
-    }
-
-    private void OnHold(InputAction.CallbackContext context)
-    {
-        _hold = context.ReadValueAsButton();
+        PlayerInputAction.Player.Look.canceled += OnLook; 
     }
 
     private void OnDisable()
@@ -86,8 +76,6 @@ public class PlayerInput : MonoBehaviour
 
         PlayerInputAction.Player.Look.performed -= OnLook;
         PlayerInputAction.Player.Look.canceled -= OnLook;
-
-
 
         PlayerInputAction.Player.Disable();
     }
@@ -129,8 +117,6 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-
-
     public bool Right
     {
         get { return _right && !playerControllerInputBlocked && !m_ExternalInputBlocked; }
@@ -142,7 +128,14 @@ public class PlayerInput : MonoBehaviour
         set { _left = value; }
         get { return _left && !playerControllerInputBlocked && !m_ExternalInputBlocked; }
     }
-   
+
+
+    public bool Hold
+    {
+        get { return _hold && !playerControllerInputBlocked && !m_ExternalInputBlocked; }
+    }
+
+
     public bool Jump { get => _jump && !playerControllerInputBlocked && !m_ExternalInputBlocked; }
     public Vector2 Look { get => ( !playerControllerInputBlocked && !m_ExternalInputBlocked)?_look:Vector2.zero; }
     public bool Escape { get => escape; }
@@ -171,17 +164,21 @@ public class PlayerInput : MonoBehaviour
     private void OnInteract(InputAction.CallbackContext context) => interact = context.ReadValueAsButton();
 
     private bool isDash;
+    internal float dashCounter;
     private void OnDash(InputAction.CallbackContext context)
     {
         isDash = context.ReadValueAsButton();
     }
-    Vector2 _look;
-    internal float dashCounter;
-    private bool _hold;
 
+    private bool _hold;
+    private void OnHold(InputAction.CallbackContext context)
+    {
+        _hold = context.ReadValueAsButton();
+    }
+
+    Vector2 _look;
     private void OnLook(InputAction.CallbackContext context)
     {
         _look = context.ReadValue<Vector2>();
     }
-
 }
